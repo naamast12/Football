@@ -1,12 +1,11 @@
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class Cycle {
-    List<Match> matches;
-    private int id;
+    List<Match> matchesAtCycle;
 
     public Cycle(List<Team> teams){
-
 
     }
 }

@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Match {
-    private static int id = 1;
+    private int id;
     private Team homeTeam;
     private Team awayTeam;
     private List<Goal> goals;
@@ -15,6 +15,7 @@ public class Match {
         Random random = new Random();
         Team homeTeam = teams.get(random.nextInt(teams.size()));
         Team awayTeam = teams.get(random.nextInt(teams.size()));
+        //TODO
         while (homeTeam.equals(awayTeam))
             awayTeam = teams.get(random.nextInt(teams.size()));
         this.homeTeam = homeTeam;
@@ -30,16 +31,20 @@ public class Match {
         this.goals=new ArrayList<>();
         this.goals.addAll(homeGoals);
         this.goals.addAll(awayGoals);
-        for (Goal goal:goals){
-            System.out.println(goal.toString());
-        }
-//        for (int i = 0; i < goalsAmountHomeTeam; i++) {
-//            goals.add(new Goal(this.homeTeam.getPlayers()));
-//        }
-//        for (int i = 0; i < goalsAmountAwayTeam; i++) {
-//            goals.add(new Goal(this.awayTeam.getPlayers()));
+//        System.out.println(this.homeTeam.toString());
+//        System.out.println(this.awayTeam.toString());
+//        for (Goal goal:goals){
+//            System.out.println(goal.toString());
 //        }
     }
 
-
+    @Override
+    public String toString() {
+        return "Match{" +
+                "id=" + id +
+                ", homeTeam=" + homeTeam +
+                ", awayTeam=" + awayTeam +
+                ", goals=" + goals +
+                '}';
+    }
 }

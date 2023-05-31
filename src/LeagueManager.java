@@ -4,54 +4,42 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LeagueManager {
+    private int teamId;
     private List<Team> teamList;
     private List<List<Match>> leagueCycles;
 
     public LeagueManager(){
-        this.teamList=createTeams();
-        this.teamList = this.createTeams();
-        List<Match> matchesAtCycle = new ArrayList<>();
-//        matchesAtCycle.stream().collect(Match::new(this.teamList))
-//        for (int i = 0; i < Utils.MATCH_TIMES_AT_CYCLE; i++) {
-//            Match match = new Match(this.teamList);
-//            matchesAtCycle.add(match);
-//        }
-        new Match(teamList);
-//        this.leagueCycles.add(matchesAtCycle);
-
+        this.createTeams();
+        this.leagueCycles = Stream.generate(() -> {
+                    List<Match> matchesAtCycle= Stream.generate(()-> new Match(this.teamList))
+                            .limit(Utils.MATCH_TIMES_AT_CYCLE)
+                            .toList();
+                    return matchesAtCycle;
+                })
+                .limit(Utils.CYCLES_AMOUNT)
+                .collect(Collectors.toList());
+        System.out.println(this.leagueCycles.toString());
     }
 
-    private List<Team> createTeams(){
-        int teamId = 1;
+
+    private void createTeams() {
         List<String> teamsNames = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(Utils.PATH))) {
-            String line = reader.readLine();
-            teamsNames.stream()
-                    .filter(line -> line != null)
-                    .collect(Collectors.toList());
-            while ((line = reader.readLine()) != null) {
-                teamsNames.add(line);
-            }
+        try (Stream<String> lines = Files.lines(Paths.get(Utils.PATH))) {
+            teamsNames=lines.collect(Collectors.toList());
         } catch (IOException e) {
-
         }
-        List<Team>teams = new ArrayList<>();
-        for (String name : teamsNames) {
-            Team team = new Team(teamId,name, Team.createTeam());
-            teams.add(team);
+        this.teamList = teamsNames.stream()
+                .map(name -> new Team(name, Team.createTeam())).toList();
+        for (Team team : this.teamList) {
             System.out.println(team.toString());
-            teamId++;
         }
-        return teams;
-
     }
 
     public List<Team> getTeamList() {
