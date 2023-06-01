@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Team {
@@ -20,6 +21,9 @@ public class Team {
 
     public static List<Player> createTeam() {
         Random random = new Random();
+//        IntStream.range(1, 10).forEach(number -> {
+//            System.out.println();
+//        });
         AtomicInteger playerId = new AtomicInteger(1);
         List<Player> playerList = Stream.generate(() -> {
                     String firstName = Utils.PLAYERS_FIRST_NAMES.get(random.nextInt(Utils.PLAYERS_FIRST_NAMES.size()));
