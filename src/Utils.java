@@ -14,4 +14,6 @@ public class Utils {
     public static final int END_GAME = 90;
     public static final int MAX_SCORE_TEAM = 6;
     public static final int CYCLES_AMOUNT = 9;
+    public static final int CHECK = 9;
+
 }
