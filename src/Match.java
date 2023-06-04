@@ -45,13 +45,28 @@ public class Match {
 //        }
     }
 
+    public Match(int id, Team homeTeam, Team awayTeam) {
+        this.id = id;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+    }
+
+//    public String toString() {
+//        return "\nMatch{" +
+//                "id=" + id +
+//                "\n       homeTeam=" + homeTeam +
+//                "\n       awayTeam=" + awayTeam +
+//                ", goals=" + goals +
+//                '}';
+//    }
+
+
     @Override
     public String toString() {
-        return "\nMatch{" +
-                "id=" + id +
-                "\n       homeTeam=" + homeTeam +
-                "\n       awayTeam=" + awayTeam +
-                ", goals=" + goals +
+        return "Match{" +
+                "\n   id=" + id +
+                "\n         , homeTeam=" + homeTeam +
+                "\n         , awayTeam=" + awayTeam +
                 '}';
     }
 }

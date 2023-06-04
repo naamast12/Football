@@ -6,8 +6,8 @@
 //public class Cycle {
 //    List<Match> matchesAtCycle;
 //
-//    public Cycle(List<Team> teams){
-//
+//    public Cycle(List<Match> matchesAtCycle){
+//        this.matchesAtCycle = matchesAtCycle;
 //    }
 //
 //    @Override
@@ -17,4 +17,4 @@
 //                '}';
 //    }
 //}
-
+//

@@ -9,29 +9,61 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class LeagueManager {
     private int teamId;
     private List<Team> teamList;
+    private Map <Integer, Match> matchesAtCycles;
     private List<List<Match>> leagueCycles;
 
     public LeagueManager(){
         this.createTeams();
-        AtomicInteger playerId = new AtomicInteger(1);
-        this.leagueCycles = Stream.generate(() -> {
-                    List<Match> matchesAtCycle= Stream.generate(()->{
-                                int currentId = playerId.getAndIncrement();
-                                return new Match(currentId,this.teamList);
-                            })
-                            .limit(Utils.MATCH_TIMES_AT_CYCLE).distinct()
-                            .toList();
-                    return matchesAtCycle;
-                })
-                .limit(Utils.CYCLES_AMOUNT).distinct()
+//        List<Match> possibleMatches = new ArrayList<>();
+//        for (int homeTeam = 0; homeTeam<this.teamList.size(); homeTeam++){
+//            for (int awayTeam = 1; awayTeam <this.teamList.size() ; awayTeam++) {
+//                if (homeTeam!=awayTeam&&homeTeam<awayTeam)
+//                    possibleMatches.add(new Match(teamList.get(homeTeam),teamList.get(awayTeam)));
+//            }
+//        }
+        Random random = new Random();
+        AtomicInteger id = new AtomicInteger(1);
+        List<Match> possibleMatches = IntStream.range(0, teamList.size())
+                .boxed()
+                .flatMap(homeTeam -> IntStream.range(homeTeam + 1, teamList.size())
+                        .mapToObj(awayTeam -> {
+                            int currentId = id.getAndIncrement();
+                            return new Match(currentId, teamList.get(homeTeam), teamList.get(awayTeam));
+                        }))
                 .collect(Collectors.toList());
-        System.out.println(this.leagueCycles.toString());
-//        System.out.println(new Cycle(this.teamList));
+        Collections.shuffle(possibleMatches);
+
+        this.leagueCycles = Stream.generate(() -> {
+            List<Match> cycle = List.of(possibleMatches.get(0),possibleMatches.get(1),possibleMatches.get(2)
+                    ,possibleMatches.get(3),possibleMatches.get(4));
+            if (Utils.MATCH_TIMES_AT_CYCLE <= possibleMatches.size()) {
+                possibleMatches.subList(0, Utils.MATCH_TIMES_AT_CYCLE).clear();
+            }
+            return cycle;
+        }).limit(Utils.CYCLES_AMOUNT).collect(Collectors.toList());
+        System.out.println(leagueCycles.toString());
+//        this.leagueCycles = Stream.generate(() -> {
+//                    AtomicInteger playerId = new AtomicInteger(1);
+//                    this.matchesAtCycles = new HashMap<>();
+//                    this.matchesAtCycles=teamList.stream()
+//                            .flatMap()
+//                    List<Match> matchesAtCycle= Stream.generate(()->{
+//                                int currentId = playerId.getAndIncrement();
+//                                return new Match(currentId,this.teamList);
+//                            })
+//                            .limit(Utils.MATCH_TIMES_AT_CYCLE).distinct()
+//                            .toList();
+//                    return matchesAtCycle;
+//                })
+//                .limit(Utils.CYCLES_AMOUNT).distinct()
+//                .collect(Collectors.toList());
+//        System.out.println(this.leagueCycles.toString());
 
     }
 
@@ -46,10 +78,6 @@ public class LeagueManager {
         for (Team team : this.teamList) {
 //            System.out.println(team.toString());
         }
-    }
-
-    public List<Team> getTeamList() {
-        return teamList;
     }
 
     @Override

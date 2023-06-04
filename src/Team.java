@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -35,6 +36,8 @@ public class Team {
         return playerList;
     }
 
+
+
     public List<Player> getPlayers() {
         return players;
     }
@@ -46,5 +49,9 @@ public class Team {
                 ", name='" + name + '\'' +
                 ", players=" + players +
                 '}';
+    }
+
+    public int getId() {
+        return this.id;
     }
 }
