@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 public class LeagueManager {
     private int teamId;
     private List<Team> teamList;
-    private Map <Integer, Match> matchesAtCycles;
     private List<Cycle> leagueCycles;
 
     public LeagueManager(){
@@ -30,19 +29,29 @@ public class LeagueManager {
                             return new Match(currentId, teamList.get(homeTeam), teamList.get(awayTeam));
                         }))
                 .collect(Collectors.toList());
-        Collections.shuffle(possibleMatches);
+//        Collections.shuffle(possibleMatches);
 
         AtomicInteger idCycle = new AtomicInteger(1);
         this.leagueCycles = Stream.generate(() -> {
-            List<Match> cycle = List.of(possibleMatches.get(0),possibleMatches.get(1),possibleMatches.get(2)
+            List<Match> cycleList = List.of(possibleMatches.get(0),possibleMatches.get(1),possibleMatches.get(2)
                     ,possibleMatches.get(3),possibleMatches.get(4));
             if (Utils.MATCH_TIMES_AT_CYCLE <= possibleMatches.size()) {
                 possibleMatches.subList(0, Utils.MATCH_TIMES_AT_CYCLE).clear();
             }
             int currentId = idCycle.getAndIncrement();
-            return new Cycle(currentId,cycle);
+            Cycle cycle = new Cycle(currentId,cycleList);
+            cycle.cycleResult();
+            Map<String,Integer> points = cycle.pointCalculation();
+            for (Map.Entry<String, Integer> entry : points.entrySet()) {
+                String key = entry.getKey();
+                Integer value = entry.getValue();
+                System.out.println("team: " + key + ", score: " + value);
+            }
+//            cycle.findMatchesByTeam(3);
+            return cycle;
         }).limit(Utils.CYCLES_AMOUNT).collect(Collectors.toList());
-        System.out.println(leagueCycles.toString());
+//        System.out.println(leagueCycles.toString());
+        manager();
 
 
     }
@@ -58,6 +67,44 @@ public class LeagueManager {
         for (Team team : this.teamList) {
 //            System.out.println(team.toString());
         }
+    }
+//    public void manager(){
+//        List<Match> matches = this.leagueCycles.stream()
+//                .flatMap(cycle -> cycle.getMatchesAtCycle().stream()) // מחזיר זרם של משחקים מתוך המחזורים
+//                .collect(Collectors.toList());
+//        matches.stream()
+//                        .forEach(match -> {
+//                            System.out.println(match.toString());
+//                            countDown(10);
+//                        });
+//    }
+//    public synchronized void countDown(int count){
+//        new Thread(()->{
+//            if (count>0){
+//                System.out.println(count);
+//                Utils.sleep(1000);
+//                countDown(count-1);
+//            }
+//        }).start();
+//    }
+public void manager() {
+//    List<Match> matches = this.leagueCycles.stream()
+//            .flatMap(cycle -> cycle.getMatchesAtCycle().stream()) // מחזיר זרם של משחקים מתוך המחזורים
+//            .collect(Collectors.toList());
+//
+//    matches.stream()
+//            .forEach(match -> {
+//                System.out.println(match.toString());
+//                countDown(10);
+//            });
+//}
+//
+//    public void countDown(int count) {
+//        if (count > 0) {
+//            System.out.println(count);
+//            Utils.sleep(1000);
+//            countDown(count - 1);
+//        }
     }
 
     @Override

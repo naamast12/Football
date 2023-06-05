@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -7,13 +8,11 @@ public class Goal {
     private Player scorer;
 
 
-    public Goal(int id, Team homeTeam, Team awayTeam) {
+    public Goal(int id, List<Player> playersAtMatch) {
         this.id=id;
-
         Random random = new Random();
         this.minute = random.nextInt(Utils.START_GAME,Utils.END_GAME);
-        this.scorer = players.get(random.nextInt(players.size()));
-        this.id++;
+        this.scorer = playersAtMatch.get(random.nextInt(playersAtMatch.size()));
 
     }
 
@@ -21,12 +20,4 @@ public class Goal {
         return scorer;
     }
 
-    @Override
-    public String toString() {
-        return "\n           Goal{" +
-                "id="+this.id+
-                ", minute=" + minute +
-                ", scorer=" + scorer +
-                '}';
-    }
 }

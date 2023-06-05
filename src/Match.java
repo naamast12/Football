@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,70 +11,67 @@ public class Match {
     private Team homeTeam;
     private Team awayTeam;
     private List<Goal> goals;
-
-
-//    public Match(int id,List<Team> teams) {
-//        this.id=id;
-//        Random random = new Random();
-//        Team homeTeam = teams.get(random.nextInt(teams.size()));
-//        Team awayTeam = teams.get(random.nextInt(teams.size()));
-//        while (homeTeam.equals(awayTeam))
-//            awayTeam = teams.get(random.nextInt(teams.size()));
-//        this.homeTeam = homeTeam;
-//        this.awayTeam = awayTeam;
-//        int goalsAmountHomeTeam = random.nextInt(Utils.MAX_SCORE_TEAM);
-//        int goalsAmountAwayTeam = random.nextInt(Utils.MAX_SCORE_TEAM);
-//        AtomicInteger playerId = new AtomicInteger(0);
-//        homeGoals = Stream.generate(() -> {
-//                    int currentId = playerId.getAndIncrement();
-//                    return new Goal(currentId, this.homeTeam.getPlayers());
-//                })
-//                .limit(goalsAmountHomeTeam)
-//                .collect(Collectors.toList());
-//        List<Goal> awayGoals = Stream.generate(() -> {
-//                    int currentId = playerId.getAndIncrement();
-//                    return new Goal(currentId, this.awayTeam.getPlayers());
-//                })
-//                .limit(goalsAmountAwayTeam)
-//                .collect(Collectors.toList());
-//        this.goals=new ArrayList<>();
-//        this.goals.addAll(homeGoals);
-//        this.goals.addAll(awayGoals);
-////        System.out.println(this.homeTeam.toString());
-////        System.out.println(this.awayTeam.toString());
-////        for (Goal goal:goals){
-////            System.out.println(goal.toString());
-//        }
+    private long countHome;
+    private long countAway;
 
 
     public Match(int id, Team homeTeam, Team awayTeam) {
         this.id = id;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
-        System.out.println(matchResult());
-        this.goals = new Goal(1, this.homeTeam,this.awayTeam);
+        Random random = new Random();
+        List<Player> playersAtMatch = new ArrayList<>();
+        playersAtMatch.addAll(homeTeam.getPlayers());
+        playersAtMatch.addAll(awayTeam.getPlayers());
+        AtomicInteger playerId = new AtomicInteger(1);
+        this.goals = Stream.generate(()->{
+            int currentId = playerId.getAndIncrement();
+            return new Goal(currentId, playersAtMatch);
+        })
+                .limit(random.nextInt(7))
+                .collect(Collectors.toList());
+
+
+
     }
     public String matchResult() {
-        if (goals!=null) {
-            long homeScore = goals.stream()
-                    .filter(goal -> this.homeTeam.getPlayers().contains(goals))
-                    .count();
-            long awayScore = goals.stream()
-                    .filter(goal -> this.awayTeam.getPlayers().contains(goals))
-                    .count();
-            return (homeScore + "to:" + this.homeTeam.getName() + "\n" + awayScore + "to:" + this.awayTeam.getName());
-        }
-        else return "error";
+        countHome = this.goals.stream()
+                .map(Goal::getScorer)
+                .filter(this.homeTeam.getPlayers()::contains)
+                .count();
 
+        countAway = this.goals.stream()
+                .map(Goal::getScorer)
+                .filter(this.awayTeam.getPlayers()::contains)
+                .count();
+
+        return countHome + " to:" + this.homeTeam.getName() + "\n" + countAway + " to:" + this.awayTeam.getName();
     }
 
+    public long getCountHome() {
+        return countHome;
+    }
+
+    public long getCountAway() {
+        return countAway;
+    }
+
+    public Team getHomeTeam() {
+        return homeTeam;
+    }
+
+    public Team getAwayTeam() {
+        return awayTeam;
+    }
 
     @Override
     public String toString() {
-        return "Match{" +
-                "\n   id match=" + id +
-                "\n         , homeTeam=" + homeTeam +
-                "\n         , awayTeam=" + awayTeam +
-                '}';
+        return "\n" + homeTeam.getName() +
+                " against " + awayTeam.getName() ;
     }
+
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
 }

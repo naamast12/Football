@@ -46,13 +46,8 @@ public class Team {
         return name;
     }
 
-    @Override
-    public String toString() {
-        return "Team{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", players=" + players +
-                '}';
+    public static int getTeamIdStatic() {
+        return teamIdStatic;
     }
 
     public int getId() {
