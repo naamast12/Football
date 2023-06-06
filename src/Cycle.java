@@ -103,8 +103,9 @@ public class Cycle {
     }
 //    public List<Team> findTopScoringTeams(int n){
 //        //מתודה זו אמורה להחזיר את n הקבוצות שהבקיעו את המספר הרב ביותר של השערים.
+//
 //        List<Team> team = matchesAtCycle.stream()
-//                .max(match -> match.getGoals().size());
+//                .max();
 //    }
     public List<Player> findPlayersWithAtLeastNGoals(int n){
         //מתודה זו צריכה להחזיר רשימה של שחקנים שכבשו לפחות n  שערים.

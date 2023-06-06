@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -54,9 +55,28 @@ public class LeagueManager {
                 Integer value = entry.getValue();
                 System.out.println("team: " + key + ", score: " + value);
             }
-            System.out.println("bla bla");
+            System.out.println( "enter your choose: 1.findMatchesByTeam" +
+                                " 2.findPlayersWithAtLeastNGoals");
             Scanner scanner=new Scanner(System.in);
-            String choose=scanner.nextLine();
+            int choose = scanner.nextInt();
+            switch (choose){
+                case 1:
+                    System.out.println("choose id");
+                    int idChoose= scanner.nextInt();
+                    List<Match> matchByTeam=cycle.findMatchesByTeam(idChoose);
+                    for (Match match: matchByTeam){
+                        System.out.println(match.toString());
+                    }
+                    break;
+                case 2:
+                    System.out.println("choose goals min");
+                    int goalMinChoose= scanner.nextInt();
+                    List<Player> minGoalsPlayers=cycle.findPlayersWithAtLeastNGoals(goalMinChoose);
+                    for (Player player: minGoalsPlayers){
+                        System.out.println(player.toString());
+                    }
+                    break;
+            }
 //            cycle.findMatchesByTeam(3);
             return cycle;
         }).limit(Utils.CYCLES_AMOUNT).collect(Collectors.toList());
