@@ -73,6 +73,26 @@ public class Cycle {
         }
         return this.points;
     }
+//    public Map<String,Integer> compare() {
+//        int goalDifferenceHome = 0;
+//        int goalDifferenceAway = 0;
+//        Map<String, Integer> goalDifferenceMap = new HashMap<>();
+//        for (Match match : this.matchesAtCycle) {
+//            goalDifferenceMap.put(match.getHomeTeam().getName(), 0);
+//            goalDifferenceMap.put(match.getAwayTeam().getName(), 0);
+//        }
+//            for (Match difference : this.matchesAtCycle) {
+//                goalDifferenceHome += difference.getCountHome() - difference.getCountAway();
+//                goalDifferenceAway += difference.getCountAway() - difference.getCountHome();
+//                String nameHome = difference.getHomeTeam().getName();
+//                String nameAway = difference.getAwayTeam().getName();
+//                int valueHome = goalDifferenceMap.get(nameHome);
+//                int valueAway = goalDifferenceMap.get(nameAway);
+//                goalDifferenceMap.put(nameHome, valueHome + goalDifferenceHome);
+//                goalDifferenceMap.put(nameAway, valueAway + goalDifferenceAway);
+//        }
+//        return goalDifferenceMap;
+//    }
 
     public List<Match> findMatchesByTeam(int teamId) {
         List<Match> matchByTeam = new ArrayList<>();

@@ -42,18 +42,24 @@ public class LeagueManager {
             Cycle cycle = new Cycle(currentId,cycleList);
             cycle.cycleResult();
             Map<String,Integer> points = cycle.pointCalculation();
-            for (Map.Entry<String, Integer> entry : points.entrySet()) {
+            Map<String, Integer> sortedByValue = points.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+//                            .thenComparing(Map.Entry.comparingByKey()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+            for (Map.Entry<String, Integer> entry : sortedByValue.entrySet()) {
                 String key = entry.getKey();
                 Integer value = entry.getValue();
                 System.out.println("team: " + key + ", score: " + value);
             }
+            System.out.println("bla bla");
+            Scanner scanner=new Scanner(System.in);
+            String choose=scanner.nextLine();
 //            cycle.findMatchesByTeam(3);
             return cycle;
         }).limit(Utils.CYCLES_AMOUNT).collect(Collectors.toList());
-//        System.out.println(leagueCycles.toString());
-        manager();
-
-
     }
 
     private void createTeams() {
@@ -64,48 +70,9 @@ public class LeagueManager {
         }
         this.teamList = teamsNames.stream()
                 .map(name -> new Team(name, Team.createTeam())).toList();
-        for (Team team : this.teamList) {
-//            System.out.println(team.toString());
-        }
     }
-//    public void manager(){
-//        List<Match> matches = this.leagueCycles.stream()
-//                .flatMap(cycle -> cycle.getMatchesAtCycle().stream()) // מחזיר זרם של משחקים מתוך המחזורים
-//                .collect(Collectors.toList());
-//        matches.stream()
-//                        .forEach(match -> {
-//                            System.out.println(match.toString());
-//                            countDown(10);
-//                        });
-//    }
-//    public synchronized void countDown(int count){
-//        new Thread(()->{
-//            if (count>0){
-//                System.out.println(count);
-//                Utils.sleep(1000);
-//                countDown(count-1);
-//            }
-//        }).start();
-//    }
-public void manager() {
-//    List<Match> matches = this.leagueCycles.stream()
-//            .flatMap(cycle -> cycle.getMatchesAtCycle().stream()) // מחזיר זרם של משחקים מתוך המחזורים
-//            .collect(Collectors.toList());
-//
-//    matches.stream()
-//            .forEach(match -> {
-//                System.out.println(match.toString());
-//                countDown(10);
-//            });
-//}
-//
-//    public void countDown(int count) {
-//        if (count > 0) {
-//            System.out.println(count);
-//            Utils.sleep(1000);
-//            countDown(count - 1);
-//        }
-    }
+
+
 
     @Override
     public String toString() {
