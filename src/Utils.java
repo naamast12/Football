@@ -16,6 +16,7 @@ public class Utils {
     public static final int CYCLES_AMOUNT = 9;
     public static final int ADD_TO_WINNER = 3;
     public static final int EQUALITY = 1;
+    public static final  int COUNT_DOWN=10;
 
     public static void sleep (int millis) {
         try {

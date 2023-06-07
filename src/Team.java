@@ -35,11 +35,8 @@ public class Team {
 
     @Override
     public String toString() {
-        return "Team{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", players=" + players +
-                '}';
+        return this.name;
+
     }
 
     public List<Player> getPlayers() {

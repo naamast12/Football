@@ -70,7 +70,7 @@ public Map<Integer, Integer> goalAtPlayer() {
     @Override
     public String toString() {
         return "\n" + homeTeam.getName() +
-                " against " + awayTeam.getName() ;
+                " vs " + awayTeam.getName() ;
     }
 
     public List<Goal> getGoals() {

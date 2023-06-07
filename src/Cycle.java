@@ -28,7 +28,7 @@ public class Cycle {
         this.matchesAtCycle.stream()
                 .forEach(match -> {
                     System.out.println(match.toString());
-                    countDown(1);
+                    countDown(Utils.COUNT_DOWN);
                     System.out.println(match.matchResult());
                 });
     }
@@ -43,10 +43,6 @@ public class Cycle {
 
     public Map<Team, Integer> pointCalculation() {
         this.points = new HashMap<>();
-//        for (Match match : this.matchesAtCycle) {
-//            points.put(match.getHomeTeam(), 0);
-//            points.put(match.getAwayTeam(), 0);
-//        }
         this.matchesAtCycle.stream()
                 .flatMap(match -> Stream.of(match.getHomeTeam(), match.getAwayTeam()))
                 .distinct()
@@ -170,16 +166,6 @@ public class Cycle {
 
         return  sortByPlayers;
     }
-
-    public int compareToByDifference(Map.Entry<String, Integer> entry1, Map.Entry<String , Integer> entry2) {
-        Map<Team,Integer>  goalsDifferenceTeam = goalDifference();
-        return goalsDifferenceTeam.get(entry1)-goalsDifferenceTeam.get(entry2);
-    }
-//    public int compareToByName(Map.Entry<String, Integer> entry1, Map.Entry<String , Integer> entry2) {
-//
-//
-//        return name1.compareToIgnoreCase(name2);
-//    }
 
 }
 

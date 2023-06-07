@@ -43,27 +43,27 @@ public class LeagueManager {
             Cycle cycle = new Cycle(currentId,cycleList);
             cycle.cycleResult();
             Map<Team,Integer> points = cycle.pointCalculation();
-//            Map<Team,Integer> sortPoints=points.entrySet().stream()
-//                    .sorted(Map.Entry.<Team, Integer>comparingByValue().reversed())
-//                    .thenComparing((e1, e2) -> compareToByDifference(e1.getKey(), e2.getKey())))
-//             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-//                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
             Map<Team, Integer> sortPoints = points.entrySet().stream()
                     .sorted(Map.Entry.<Team, Integer>comparingByValue().reversed()
-                            .thenComparing((e1, e2) -> cycle.compareToByDifference((Map.Entry<String, Integer>) e1.getKey(), (Map.Entry<String, Integer>) e2.getKey()))
-//                            .thenComparing(()-> cycle.compareToByName())
-                    ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                            .thenComparing((e1, e2) -> {
+                                int goalDifference1 = cycle.goalDifference().get(e1.getKey());
+                                int goalDifference2 = cycle.goalDifference().get(e2.getKey());
+                                return Integer.compare(goalDifference1, goalDifference2);
+                            }) .thenComparing(Map.Entry.comparingByKey(
+                                    Comparator.comparing(Team::getName))))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                             (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
 
             sortPoints.forEach((team, score) ->
                     System.out.println("team: " + team.getName() + ", score: " + score));
 
             System.out.println( "enter your choose:" +
-                                "\n 1.findMatchesByTeam"+
-                                "\n 2.findPlayersWithAtLeastNGoals"+
-                                "\n 3.findTopScoringTeams"+
-                                "\n 4.getTeamByPosition"+
-                                "\n 5.getTopScorers");
+                                "\n 1.find matches by team"+
+                                "\n 2.find players with at least N goals"+
+                                "\n 3.find top scoring teams"+
+                                "\n 4.get team by position"+
+                                "\n 5.get top scorers");
             Scanner scanner=new Scanner(System.in);
             int choose = 0;
             try {
@@ -95,7 +95,7 @@ public class LeagueManager {
                     }
                     List<Player> minGoalsPlayers=cycle.findPlayersWithAtLeastNGoals(goalMinChoose);
                     if(minGoalsPlayers.size()==0)
-                        System.out.println("not have payer with this min goals");
+                        System.out.println("No player has scored at least that number of goals");
                     else
                         minGoalsPlayers.forEach(player -> System.out.println(player.toString()));
                     break;
@@ -159,9 +159,6 @@ public class LeagueManager {
         this.teamList = teamsNames.stream()
                 .map(name -> new Team(name, Team.createTeam())).toList();
     }
-
-
-
     @Override
     public String toString() {
         return "LeagueManager{" +
