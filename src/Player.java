@@ -9,6 +9,10 @@ public class Player {
         this.lastName = lastName;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "Player{" +

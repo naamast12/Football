@@ -30,7 +30,7 @@ public class LeagueManager {
                             return new Match(currentId, teamList.get(homeTeam), teamList.get(awayTeam));
                         }))
                 .collect(Collectors.toList());
-//        Collections.shuffle(possibleMatches);
+
 
         AtomicInteger idCycle = new AtomicInteger(1);
         this.leagueCycles = Stream.generate(() -> {
@@ -42,42 +42,97 @@ public class LeagueManager {
             int currentId = idCycle.getAndIncrement();
             Cycle cycle = new Cycle(currentId,cycleList);
             cycle.cycleResult();
-            Map<String,Integer> points = cycle.pointCalculation();
-            Map<String, Integer> sortedByValue = points.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-//                            .thenComparing(Map.Entry.comparingByKey()))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+            Map<Team,Integer> points = cycle.pointCalculation();
+            points.forEach((team, score) ->
+                    System.out.println("team: " + team.getName() + ", score: " + score));
 
-            for (Map.Entry<String, Integer> entry : sortedByValue.entrySet()) {
-                String key = entry.getKey();
-                Integer value = entry.getValue();
-                System.out.println("team: " + key + ", score: " + value);
-            }
-            System.out.println( "enter your choose: 1.findMatchesByTeam" +
-                                " 2.findPlayersWithAtLeastNGoals");
+            System.out.println( "enter your choose:" +
+                                "\n 1.findMatchesByTeam"+
+                                "\n 2.findPlayersWithAtLeastNGoals"+
+                                "\n 3.findTopScoringTeams"+
+                                "\n 4.getTeamByPosition"+
+                                "\n 5.getTopScorers");
             Scanner scanner=new Scanner(System.in);
-            int choose = scanner.nextInt();
+            int choose = 0;
+            try {
+                choose = scanner.nextInt();
+            } catch (Exception e) {
+            }
             switch (choose){
                 case 1:
                     System.out.println("choose id");
-                    int idChoose= scanner.nextInt();
-                    List<Match> matchByTeam=cycle.findMatchesByTeam(idChoose);
-                    for (Match match: matchByTeam){
-                        System.out.println(match.toString());
+                    int idChoose= 0;
+                    try {
+                        idChoose = scanner.nextInt();
+                    } catch (Exception e) {
+
                     }
+                    List<Match> matchByTeam=cycle.findMatchesByTeam(idChoose);
+                    if(matchByTeam.size()==0)
+                        System.out.println("this team didnt play at this cycle" );
+                    else
+                        matchByTeam.forEach(match -> System.out.println(match.toString()));
                     break;
                 case 2:
                     System.out.println("choose goals min");
-                    int goalMinChoose= scanner.nextInt();
-                    List<Player> minGoalsPlayers=cycle.findPlayersWithAtLeastNGoals(goalMinChoose);
-                    for (Player player: minGoalsPlayers){
-                        System.out.println(player.toString());
+                    int goalMinChoose= 0;
+                    try {
+                        goalMinChoose = scanner.nextInt();
+                    } catch (Exception e) {
+
                     }
+                    List<Player> minGoalsPlayers=cycle.findPlayersWithAtLeastNGoals(goalMinChoose);
+                    if(minGoalsPlayers.size()==0)
+                        System.out.println("not have payer with this min goals");
+                    else
+                    minGoalsPlayers.forEach(player -> System.out.println(player.toString()));
+                    break;
+                case 3:
+                    System.out.println("how many teams?");
+                    int teamAmount= 0;
+                    try {
+                        teamAmount = scanner.nextInt();
+                    } catch (Exception e) {
+
+                    }
+                    List<Map.Entry<Team,Long>> maxGoalTeam= cycle.findTopScoringTeams(teamAmount);
+                    maxGoalTeam.stream()
+                            .map(entry -> entry.getKey())
+                            .forEach(team -> System.out.println(team.toString()));
+
+                    break;
+                case 4:
+                    System.out.println("which position?");
+                    int position = 0;
+                    try {
+                        position = scanner.nextInt();
+                    } catch (Exception e) {
+
+                    }
+                    Team team =cycle.getTeamByPosition(position);
+                    if (team!=null)
+                        System.out.println(team.toString());
+                    else
+                        System.out.println("There is no group at this location");
+
+                    break;
+                case 5:
+                    System.out.println("how many players");
+                    int playersAmount = 0;
+                    try {
+                        playersAmount = scanner.nextInt();
+                    } catch (Exception e) {
+                    }
+                    Map<Integer,Integer> players =cycle.getTopScorers(playersAmount);
+                    players.forEach((playerId, goals) -> System.out.println
+                            ("Player ID: " + playerId + ", Goals: " + goals));
+                    if (players.size()<playersAmount)
+                        System.out.println("this is the max players");
+                    break;
+                default:
+                    System.out.println("not option");
                     break;
             }
-//            cycle.findMatchesByTeam(3);
             return cycle;
         }).limit(Utils.CYCLES_AMOUNT).collect(Collectors.toList());
     }

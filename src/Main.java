@@ -12,7 +12,6 @@ public class Main {
     public static void main(String[] args) {
         createTeamNamesFile();
         new LeagueManager();
-
     }
     public static void createTeamNamesFile(){
         try {

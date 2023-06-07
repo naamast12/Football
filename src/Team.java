@@ -22,9 +22,6 @@ public class Team {
 
     public static List<Player> createTeam() {
         Random random = new Random();
-//        IntStream.range(1, 10).forEach(number -> {
-//            System.out.println();
-//        });
         AtomicInteger playerId = new AtomicInteger(1);
         List<Player> playerList = Stream.generate(() -> {
                     String firstName = Utils.PLAYERS_FIRST_NAMES.get(random.nextInt(Utils.PLAYERS_FIRST_NAMES.size()));
@@ -36,7 +33,14 @@ public class Team {
         return playerList;
     }
 
-
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", players=" + players +
+                '}';
+    }
 
     public List<Player> getPlayers() {
         return players;
@@ -44,10 +48,6 @@ public class Team {
 
     public String getName() {
         return name;
-    }
-
-    public static int getTeamIdStatic() {
-        return teamIdStatic;
     }
 
     public int getId() {

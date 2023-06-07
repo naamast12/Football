@@ -16,6 +16,10 @@ public class Goal {
 
     }
 
+    public int getId() {
+        return id;
+    }
+
     public Player getScorer() {
         return scorer;
     }

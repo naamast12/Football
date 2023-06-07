@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,7 +44,13 @@ public class Match {
 
         return countHome + " to:" + this.homeTeam.getName() + "\n" + countAway + " to:" + this.awayTeam.getName();
     }
-
+public Map<Integer, Integer> goalAtPlayer() {
+    return goals.stream()
+            .collect(Collectors.groupingBy(
+                    goal -> goal.getScorer().getId(),
+                    Collectors.summingInt(goal -> 1)
+            ));
+}
     public long getCountHome() {
         return countHome;
     }
