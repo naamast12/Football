@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -68,34 +70,30 @@ public class Cycle {
                 this.points.put(away, pointAwayValue + Utils.EQUALITY);
             }
         }
-        this.points.entrySet().stream()
-                .sorted(Map.Entry.<Team, Integer>comparingByValue().reversed())
-//                            .thenComparing(Map.Entry.comparingByKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
         return this.points;
     }
 
-//    public Map<String,Integer> compare() {
-//        int goalDifferenceHome = 0;
-//        int goalDifferenceAway = 0;
-//        Map<String, Integer> goalDifferenceMap = new HashMap<>();
-//        for (Match match : this.matchesAtCycle) {
-//            goalDifferenceMap.put(match.getHomeTeam().getName(), 0);
-//            goalDifferenceMap.put(match.getAwayTeam().getName(), 0);
-//        }
-//            for (Match difference : this.matchesAtCycle) {
-//                goalDifferenceHome += difference.getCountHome() - difference.getCountAway();
-//                goalDifferenceAway += difference.getCountAway() - difference.getCountHome();
-//                String nameHome = difference.getHomeTeam().getName();
-//                String nameAway = difference.getAwayTeam().getName();
-//                int valueHome = goalDifferenceMap.get(nameHome);
-//                int valueAway = goalDifferenceMap.get(nameAway);
-//                goalDifferenceMap.put(nameHome, valueHome + goalDifferenceHome);
-//                goalDifferenceMap.put(nameAway, valueAway + goalDifferenceAway);
-//        }
-//        return goalDifferenceMap;
-//    }
+    public Map<Team,Integer> goalDifference () {
+        int goalDifferenceHome = 0;
+        int goalDifferenceAway = 0;
+        Map<Team, Integer> goalDifferenceMap = new HashMap<>();
+        for (Match match : this.matchesAtCycle) {
+            goalDifferenceMap.put(match.getHomeTeam(), 0);
+            goalDifferenceMap.put(match.getAwayTeam(), 0);
+        }
+        for (Match difference : this.matchesAtCycle) {
+                goalDifferenceHome += difference.getCountHome() - difference.getCountAway();
+                goalDifferenceAway += difference.getCountAway() - difference.getCountHome();
+                Team nameHome = difference.getHomeTeam();
+                Team nameAway = difference.getAwayTeam();
+                int valueHome = goalDifferenceMap.get(nameHome);
+                int valueAway = goalDifferenceMap.get(nameAway);
+                goalDifferenceMap.put(nameHome, valueHome + goalDifferenceHome);
+                goalDifferenceMap.put(nameAway, valueAway + goalDifferenceAway);
+        }
+        return goalDifferenceMap;
+    }
 
     public List<Match> findMatchesByTeam(int teamId) {
         List<Match> matchByTeam = new ArrayList<>();
@@ -172,6 +170,16 @@ public class Cycle {
 
         return  sortByPlayers;
     }
+
+    public int compareToByDifference(Map.Entry<String, Integer> entry1, Map.Entry<String , Integer> entry2) {
+        Map<Team,Integer>  goalsDifferenceTeam = goalDifference();
+        return goalsDifferenceTeam.get(entry1)-goalsDifferenceTeam.get(entry2);
+    }
+//    public int compareToByName(Map.Entry<String, Integer> entry1, Map.Entry<String , Integer> entry2) {
+//
+//
+//        return name1.compareToIgnoreCase(name2);
+//    }
 
 }
 

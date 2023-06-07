@@ -43,7 +43,19 @@ public class LeagueManager {
             Cycle cycle = new Cycle(currentId,cycleList);
             cycle.cycleResult();
             Map<Team,Integer> points = cycle.pointCalculation();
-            points.forEach((team, score) ->
+//            Map<Team,Integer> sortPoints=points.entrySet().stream()
+//                    .sorted(Map.Entry.<Team, Integer>comparingByValue().reversed())
+//                    .thenComparing((e1, e2) -> compareToByDifference(e1.getKey(), e2.getKey())))
+//             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+//                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+            Map<Team, Integer> sortPoints = points.entrySet().stream()
+                    .sorted(Map.Entry.<Team, Integer>comparingByValue().reversed()
+                            .thenComparing((e1, e2) -> cycle.compareToByDifference((Map.Entry<String, Integer>) e1.getKey(), (Map.Entry<String, Integer>) e2.getKey()))
+//                            .thenComparing(()-> cycle.compareToByName())
+                    ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+            sortPoints.forEach((team, score) ->
                     System.out.println("team: " + team.getName() + ", score: " + score));
 
             System.out.println( "enter your choose:" +
@@ -85,7 +97,7 @@ public class LeagueManager {
                     if(minGoalsPlayers.size()==0)
                         System.out.println("not have payer with this min goals");
                     else
-                    minGoalsPlayers.forEach(player -> System.out.println(player.toString()));
+                        minGoalsPlayers.forEach(player -> System.out.println(player.toString()));
                     break;
                 case 3:
                     System.out.println("how many teams?");
@@ -136,6 +148,7 @@ public class LeagueManager {
             return cycle;
         }).limit(Utils.CYCLES_AMOUNT).collect(Collectors.toList());
     }
+
 
     private void createTeams() {
         List<String> teamsNames = new ArrayList<>();
